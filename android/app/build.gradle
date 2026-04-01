@@ -29,17 +29,14 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
+    namespace 'com.artplaygames.launcher'  // Moved namespace to the top
+    
     compileSdk 34
     ndkVersion flutter.ndkVersion
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    dependenciesInfo {
-        includeInApk = false
-        includeInBundle = true
     }
 
     kotlinOptions {
@@ -52,7 +49,7 @@ android {
         targetSdkVersion 34
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"  // Changed to AndroidX
         ndk {
             debugSymbolLevel 'FULL'
             abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86_64'
@@ -81,7 +78,12 @@ android {
         }
     }
 
-    namespace 'com.artplaygames.launcher'
+    // Remove dependenciesInfo block if it exists (not shown in your file)
+    // Add if needed but usually not required
+    dependenciesInfo {
+        includeInApk = false
+        includeInBundle = true
+    }
 
     lint {
         abortOnError false
@@ -95,6 +97,10 @@ flutter {
 
 dependencies {
     testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    // Updated to AndroidX dependencies
+    androidTestImplementation 'androidx.test:runner:1.5.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    
+    // Add this to fix any AndroidX compatibility issues
+    implementation 'androidx.appcompat:appcompat:1.6.1'
 }
