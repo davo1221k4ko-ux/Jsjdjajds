@@ -1,0 +1,39 @@
+name: Build Artplay APK
+
+on:
+  push:
+    branches: [ main, master ] # Starts build when you push code
+  workflow_dispatch: # Allows you to start the build manually
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.41.6' # Matches your Termux version
+          channel: 'stable'
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Build APK
+        # We use --no-codesign if you don't have a keystore yet
+        run: flutter build apk --release --target-platform android-arm,android-arm64 --split-per-abi
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Artplay-Launcher-APK
+          path: build/app/outputs/flutter-apk/*.apk
